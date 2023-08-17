@@ -39,14 +39,9 @@ class ImageGallery extends Component {
 
     const images = await getImagesBySearch(this.props.search, this.state.page);
 
-    this.setState(prevState => {
-      return {
-        images: images,
-        page: prevState.page + 1,
-      };
-    });
-    this.setState({ loader: false });
+    this.setState({ images: images, page: 2, loader: false });
   }
+
   async componentDidUpdate(prevProps) {
     if (prevProps.search !== this.props.search) {
       this.setState({
@@ -86,7 +81,9 @@ class ImageGallery extends Component {
             visible={true}
           />
         )}
-        {images.length !== 0 && <LoadButton onClick={this.handleLoadMore} />}
+        {images.length !== 0 && images.length % 12 === 0 && (
+          <LoadButton onClick={this.handleLoadMore} />
+        )}
         <Modal
           isOpen={isModalOpen}
           onClose={this.closeModal}
