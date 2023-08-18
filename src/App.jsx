@@ -25,7 +25,7 @@ export class App extends Component {
     this.setState({ search: searchText, images: [],
       page: 1,
     });
-    console.log(this.state.images)
+    
   }
   handleLoadMore = () => {
     
@@ -48,20 +48,27 @@ export class App extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
+    
     const { search, page } = this.state
     if (search === '') {
+          
+
       this.setState({
         images: []
       })
+          
+
       return
     }
     if (prevState.search !== this.state.search || prevState.page !== this.state.page) {
+          this.setState({ loader: true })
+
       const newResponse = await getImagesBySearch(search, page)
       const newImages = newResponse.hits
       this.setState((prevState) => (
         {
           images: [...prevState.images,...newImages],
-          
+          loader: false
         }
       ))
     }
