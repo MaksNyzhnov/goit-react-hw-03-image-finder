@@ -21,18 +21,15 @@ export class App extends Component {
     if (searchText === this.state.search) {
       return
     }
-    this.setState({ search: searchText });
+    this.setState({ search: searchText, images: [],
+        page: 1, });
   }
-  handleLoadMore = async () => {
-    const { page, search } = this.state;
-    this.setState({ loader: true });
-
-    const newImages = await getImagesBySearch(search, page);
-
+  handleLoadMore = () => {
+    
     this.setState(prevState => ({
-      images: [...prevState.images, ...newImages],
-      page: prevState.page + 1,
-      loader: false,
+     
+    page: prevState.page + 1,
+      
     }));
   };
 
@@ -44,20 +41,21 @@ export class App extends Component {
     this.setState({ isModalOpen: false });
   };
   async componentDidMount() {
-    // this.setState({ loader: true });
-
-    // const images = await getImagesBySearch(this.props.search, this.state.page);
-
-    // this.setState({ images: images, loader: false });
+    
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (prevState.search !== this.state.search) {
-      this.setState({
-        images: [],
-        page: 1,
-      });
-      await this.handleLoadMore();
+const {search, page} = this.state
+    if (prevState.search !== this.state.search || prevState.page !== this.state.page) {
+      const newResponse = await getImagesBySearch(search, page)
+      const newImages = newResponse.hits
+      console.log(newResponse)
+      this.setState((prevState) => (
+        {
+          images: [...prevState.images,...newImages],
+          
+        }
+      ))
     }
   }
   render() {

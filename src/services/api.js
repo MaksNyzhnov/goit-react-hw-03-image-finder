@@ -9,5 +9,5 @@ export default async function getImagesBySearch(SearchQuery, page) {
 
   const response = await axios.get(URL);
 
-  return response.data.hits;
+  return response.data;
 }
